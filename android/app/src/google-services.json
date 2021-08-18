@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "494147520833",
+    "project_id": "attendance-5edfa",
+    "storage_bucket": "attendance-5edfa.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:494147520833:android:81dd8687efa1f04071f9c0",
+        "android_client_info": {
+          "package_name": "com.digisailor.takeAttendance"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "494147520833-581aeqp67283i51h8phunhm0g536c8ab.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.digisailor.takeAttendance",
+            "certificate_hash": "dde106ca3a295cd19589574799968e27bdd58dc0"
+          }
+        },
+        {
+          "client_id": "494147520833-nk1ga0skt9unombbtbcau5ntk6h3jllk.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAEzbX0v5zdc-VVAaimKzFeHraM_k1TvsI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "494147520833-nk1ga0skt9unombbtbcau5ntk6h3jllk.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
