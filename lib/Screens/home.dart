@@ -1,5 +1,9 @@
 import 'package:attendance_tracker/models/personModel.dart';
+import 'package:attendance_tracker/services/auth.dart';
+import 'package:attendance_tracker/services/db.dart';
 import 'package:attendance_tracker/widgets/dashboard.dart';
+import 'package:attendance_tracker/Screens/homePage.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 // import 'package:flutter/services.dart';
@@ -9,9 +13,11 @@ import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 
 class Home extends StatefulWidget {
   const Home({
-    Key key,
+    Key key, this.person, this.auth, this.decrypt,
   }) : super(key: key);
-
+  final PersonModel person;
+  final AuthenticationService auth;
+  final Function decrypt;
   @override
   _HomeState createState() => _HomeState();
 }
@@ -21,11 +27,13 @@ class _HomeState extends State<Home> {
   var lastDay = DateTime.utc(2022, 1, 1);
   var _focusedDay = DateTime.now();
   var _selectedDay = DateTime.now();
+  final auth = AuthenticationService();
 
   String _scanBarcode;
 
   @override
   Widget build(BuildContext context) {
+
     return SingleChildScrollView(
       child: ConstrainedBox(
         constraints:
@@ -44,9 +52,9 @@ class _HomeState extends State<Home> {
                       child: Icon(
                         Icons.qr_code,
                         size: 100,),
-                      onPressed: (){},
+                      onPressed: scanQR,
                     ),
-                     Text("Touch to Scan")
+                     Text("Scan t register your attendance")
                   ],),
                 ),
               ),
@@ -95,7 +103,12 @@ class _HomeState extends State<Home> {
     try {
       barcodeScanRes = await FlutterBarcodeScanner.scanBarcode(
           '#ff6666', 'Cancel', true, ScanMode.QR);
-      print(barcodeScanRes);
+      if(barcodeScanRes.isNotEmpty){
+        var decrypted =  widget.decrypt(barcodeScanRes);
+        var date = DateTime.parse(decrypted);
+        if(isSameDay(date, DateTime.now()))
+          setAttendance(uid: widget.auth.currentUser.uid );
+      }
     } on PlatformException {
       barcodeScanRes = 'Failed to get platform version.';
     }

@@ -19,11 +19,9 @@ Future<void> addPerson({PersonModel person, String uid}) async {
 
 //set Attendeance
 
-Future<void> setAttendance({DateTime date, bool status, String uid}) async {
+Future<void> setAttendance({String uid}) async {
 
-  if (date.hour <= 10 && date.minute <= 30) {
-  }
-
+  var date = DateTime.now().toUtc();
   var doc = await users.doc(uid).get();
   var person = PersonModel.fromJson(doc.data());
   var isNew = true;
@@ -38,7 +36,7 @@ Future<void> setAttendance({DateTime date, bool status, String uid}) async {
   }
 
   if(isNew){
-    person.dates.add(Date(date: date,status: status));
+    person.dates.add(Date(date: date,status: true));
   } else {
     print("Already Set");
   }
@@ -48,8 +46,13 @@ Future<void> setAttendance({DateTime date, bool status, String uid}) async {
 
 }
 
-Future<PersonModel> getPersonProfile(String uid) async {
-  var doc = await users.doc(uid).get();
-  var data = doc.data();
-  return PersonModel.fromJson(data);
+Stream<DocumentSnapshot<Map<String,Object>>> getPersonProfile(String uid) {
+  Stream documentStream = users.doc(uid).snapshots();
+  return documentStream;
 }
+
+Stream<QuerySnapshot<Map<String,Object>>> getPeople() {
+  Stream collectionStream = users.snapshots();
+  return collectionStream;
+}
+

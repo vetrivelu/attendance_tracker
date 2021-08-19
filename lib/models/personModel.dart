@@ -22,6 +22,7 @@ class PersonModel with ChangeNotifier{
         this.totalHolidays= 0,
         this.totalUnassigned= 0,
         this.dates,
+        this.lastDate,
         // this.february, 
         // this.march,
         // this.april, 
@@ -45,6 +46,7 @@ class PersonModel with ChangeNotifier{
     int totalHolidays;
     int totalUnassigned;
     List<Date> dates;
+    DateTime lastDate;
     // List<Month> february;
     // List<Month> march;
     // List<Month> april;
@@ -68,6 +70,7 @@ class PersonModel with ChangeNotifier{
         totalHolidays: json["totalHolidays"],
         totalUnassigned: json["totalUnassigned"],
         dates: json["dates"]!=null?List<Date>.from(json["dates"].map((x) => Date.fromJson(x))) : null,
+        lastDate: DateTime.parse(json["lastDate"].toDate().toString()),
         // february: List<Month>.from(json["february"].map((x) => Month.fromJson(x))),
         // march: List<Month>.from(json["march"].map((x) => Month.fromJson(x))),
         // april: List<Month>.from(json["april"].map((x) => Month.fromJson(x))),
@@ -92,6 +95,7 @@ class PersonModel with ChangeNotifier{
         "totalHolidays": totalHolidays,
         "totalUnassigned": totalUnassigned,
         "dates": dates != null?List<dynamic>.from(dates.map((x) => x.toJson())) : null,
+        "lastDate"  : lastDate
     };
 
       List<PieData> getYearlyDataSet() {
@@ -106,11 +110,9 @@ class PersonModel with ChangeNotifier{
 
     bool getTodaysAttendance(){
       bool status =false;
-      this.dates.map((date) => {
-        if(date.date.year == DateTime.now().year && date.date.month == DateTime.now().month && date.date.day == DateTime.now().month){
-          status = true
-        }
-      });
+        if(lastDate.year == DateTime.now().year && lastDate.month == DateTime.now().month && lastDate.day == DateTime.now().month){
+          status = true;
+      }
       return status;
     }
 }

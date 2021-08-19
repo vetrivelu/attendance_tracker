@@ -23,7 +23,7 @@ class AuthenticationService extends ChangeNotifier
           email: email, password: password);
       // notifyListeners();
       print(credential.user.uid);
-      addPerson(person : PersonModel(name: name), uid : credential.user.uid);
+      addPerson(person : PersonModel(name: name, lastDate: DateTime.now()), uid : credential.user.uid);
       return credential.user.uid;
     } on FirebaseAuthException catch (e) {
       return "error" + e.code;

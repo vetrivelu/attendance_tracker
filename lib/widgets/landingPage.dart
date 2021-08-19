@@ -19,21 +19,7 @@ class LandingPage extends StatelessWidget {
           if (user == null) {
             return LoginScreen(auth: auth);
           } else {
-            return FutureBuilder<PersonModel>(
-                future: getPersonProfile(auth.currentUser.uid),
-                builder: (context, snapshot) {
-                    if(snapshot.hasData){
-                      print(snapshot.data);
-                      return MyHomePage(
-                        auth: auth,
-                        person: snapshot.data,
-                      );
-                    }
-                    else return Scaffold(
-                        body: Center(
-                      child: CircularProgressIndicator(),
-                    ));
-                });
+            return MyHomePage(auth: auth);
           }
         }
         return Scaffold(
@@ -45,3 +31,5 @@ class LandingPage extends StatelessWidget {
     );
   }
 }
+
+
