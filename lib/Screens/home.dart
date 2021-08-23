@@ -1,23 +1,21 @@
 import 'package:attendance_tracker/models/personModel.dart';
-import 'package:attendance_tracker/services/auth.dart';
+import 'package:attendance_tracker/services/Encrypt.dart';
 import 'package:attendance_tracker/services/db.dart';
 import 'package:attendance_tracker/widgets/dashboard.dart';
-import 'package:attendance_tracker/Screens/homePage.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-// import 'package:flutter/services.dart';
+
 import 'package:table_calendar/table_calendar.dart';
 
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 
 class Home extends StatefulWidget {
   const Home({
-    Key key, this.person, this.auth, this.decrypt,
+    Key key,
+    this.person,
   }) : super(key: key);
   final PersonModel person;
-  final AuthenticationService auth;
-  final Function decrypt;
   @override
   _HomeState createState() => _HomeState();
 }
@@ -26,21 +24,32 @@ class _HomeState extends State<Home> {
   var firstDay = DateTime.utc(2021, 1, 1);
   var lastDay = DateTime.utc(2022, 1, 1);
   var _focusedDay = DateTime.now();
-  var _selectedDay = DateTime.now();
-  final auth = AuthenticationService();
 
+  // ignore: unused_field
   String _scanBarcode;
+
+  getAttendanceonDate(DateTime date) {
+    var status = false;
+    if (widget.person.dates.isNotEmpty) {
+      widget.person.dates.forEach((element) {
+        if (isSameDay(date, element.date)) {
+          // print("status : ${element.status}");
+          status =  element.status;
+        }
+      });
+    }
+    return status;
+  }
 
   @override
   Widget build(BuildContext context) {
-
     return SingleChildScrollView(
       child: ConstrainedBox(
         constraints:
             BoxConstraints(minHeight: MediaQuery.of(context).size.height),
         child: Column(
           children: [
-            Card(
+            widget.person.isAdmin? null: Card(
               child: SizedBox(
                 height: MediaQuery.of(context).size.width / 2,
                 width: MediaQuery.of(context).size.width,
@@ -48,25 +57,20 @@ class _HomeState extends State<Home> {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                    ElevatedButton(
-                      child: Icon(
-                        Icons.qr_code,
-                        size: 100,),
-                      onPressed: scanQR,
-                    ),
-                     Text("Scan t register your attendance")
-                  ],),
+                      ElevatedButton(
+                        child: Icon(
+                          Icons.qr_code,
+                          size: 100,
+                        ),
+                        onPressed: scanQR,
+                      ),
+                      Text("Scan to register your attendance")
+                    ],
+                  ),
                 ),
               ),
             ),
-            ExpansionTile(
-              title: Text("Dashboard"),
-              leading: Icon(Icons.dashboard),
-              // maintainState: true,
-              children: [
-                Dashboard(person: PersonModel(name: "Vetri", isAdmin: false))
-              ],
-            ),
+            GetDashboard(widget: widget),
             SizedBox(height: 10),
             ExpansionTile(
               title: Text("Calendar"),
@@ -78,21 +82,46 @@ class _HomeState extends State<Home> {
                   firstDay: firstDay,
                   focusedDay: _focusedDay,
                   lastDay: lastDay,
-                  selectedDayPredicate: ((day) {
-                    return isSameDay(_selectedDay, day);
-                  }),
                   onDaySelected: (selectedDay, focusedDay) {
-                    setState(() {
-                      _selectedDay = selectedDay;
-                      _focusedDay =
-                          focusedDay; // update `_focusedDay` here as well
-                    });
                   },
+                  calendarBuilders:
+                      CalendarBuilders(selectedBuilder:getSelectedBuilder , defaultBuilder: getDefaultBuilder),
                 )
               ],
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget getDefaultBuilder(context, DateTime day, _) {
+    if (day.weekday == DateTime.sunday)
+      return NormalDay(
+        day: day,
+      );
+      var status = getAttendanceonDate(day);
+      print(status);
+    return Container(
+      height: 40,
+      width: 40,
+      child: Center(
+        child: Text(day.day.toString()),
+      ),
+      decoration: status ? BoxDecoration(
+        color: Colors.yellow,
+        shape: BoxShape.rectangle,
+        borderRadius: BorderRadius.all(Radius.circular(100)),
+      ) : null,
+    );
+  }
+
+  Widget getSelectedBuilder(context, day, _) {
+    return Container(
+      height: 35,
+      width: 35,
+      child: Center(
+        child: Text(day.day.toString()),
       ),
     );
   }
@@ -103,11 +132,11 @@ class _HomeState extends State<Home> {
     try {
       barcodeScanRes = await FlutterBarcodeScanner.scanBarcode(
           '#ff6666', 'Cancel', true, ScanMode.QR);
-      if(barcodeScanRes.isNotEmpty){
-        var decrypted =  widget.decrypt(barcodeScanRes);
+      if (barcodeScanRes.isNotEmpty) {
+        var decrypted = Encryptor.decrypt(barcodeScanRes);
         var date = DateTime.parse(decrypted);
-        if(isSameDay(date, DateTime.now()))
-          setAttendance(uid: widget.auth.currentUser.uid );
+        if (isSameDay(date, DateTime.now()))
+          setAttendance(uid: widget.person.uid);
       }
     } on PlatformException {
       barcodeScanRes = 'Failed to get platform version.';
@@ -121,5 +150,53 @@ class _HomeState extends State<Home> {
     setState(() {
       _scanBarcode = barcodeScanRes;
     });
+  }
+}
+
+class GetDashboard extends StatelessWidget {
+  const GetDashboard({
+    Key key,
+    @required this.widget,
+  }) : super(key: key);
+
+  final Home widget;
+
+  @override
+  Widget build(BuildContext context) {
+    return ExpansionTile(
+      title: Text("Dashboard"),
+      leading: Icon(Icons.dashboard),
+      // maintainState: true,
+      children: [
+        Dashboard(person: widget.person),
+      ],
+    );
+  }
+}
+
+class NormalDay extends StatelessWidget {
+  const NormalDay({
+    Key key,
+    this.day,
+  }) : super(key: key);
+  final DateTime day;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 43,
+      width: 43,
+      child: Center(
+        child: Text(
+          day.day.toString(),
+          style: TextStyle(color: Colors.red),
+        ),
+      ),
+      decoration: BoxDecoration(
+        // border: Border.all(color: Colors.blue),
+        shape: BoxShape.rectangle,
+        borderRadius: BorderRadius.all(Radius.circular(100)),
+      ),
+    );
   }
 }

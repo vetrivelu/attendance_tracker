@@ -9,6 +9,7 @@ import 'package:encrypt/encrypt.dart';
 import 'package:flutter/material.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:encrypt/encrypt.dart' as crypt;
+import 'package:attendance_tracker/services/Encrypt.dart';
 
 class MyHomePage extends StatefulWidget {
   MyHomePage({this.auth});
@@ -89,14 +90,14 @@ class _MyHomePageState extends State<MyHomePage> {
       case 0 : return Scaffold(
               body: Center(
                 child: QrImage(
-                  data: encrypt(DateTime.now().toString()),
+                  data: Encryptor.encrypt(DateTime.now().toString()),
                   version: QrVersions.auto,
                   size: 200.0,
                 ),
               ),
             );
       case 1 : return ListPeople();
-      default : return Home(auth : widget.auth, person : person, decrypt: decrypt,);
+      default : return Home(person : person,);
     }
   }
 

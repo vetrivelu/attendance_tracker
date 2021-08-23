@@ -23,7 +23,7 @@ class PersonModel with ChangeNotifier{
         this.totalUnassigned= 0,
         this.dates,
         this.lastDate,
-        // this.february, 
+        this.uid, 
         // this.march,
         // this.april, 
         // this.may,
@@ -47,6 +47,7 @@ class PersonModel with ChangeNotifier{
     int totalUnassigned;
     List<Date> dates;
     DateTime lastDate;
+    String uid;
     // List<Month> february;
     // List<Month> march;
     // List<Month> april;
@@ -71,6 +72,7 @@ class PersonModel with ChangeNotifier{
         totalUnassigned: json["totalUnassigned"],
         dates: json["dates"]!=null?List<Date>.from(json["dates"].map((x) => Date.fromJson(x))) : null,
         lastDate: DateTime.parse(json["lastDate"].toDate().toString()),
+        uid: json["uid"],
         // february: List<Month>.from(json["february"].map((x) => Month.fromJson(x))),
         // march: List<Month>.from(json["march"].map((x) => Month.fromJson(x))),
         // april: List<Month>.from(json["april"].map((x) => Month.fromJson(x))),
@@ -94,8 +96,9 @@ class PersonModel with ChangeNotifier{
         "totalLeaves": totalLeaves,
         "totalHolidays": totalHolidays,
         "totalUnassigned": totalUnassigned,
-        "dates": dates != null?List<dynamic>.from(dates.map((x) => x.toJson())) : null,
-        "lastDate"  : lastDate
+        "dates": dates != null?List<dynamic>.from(dates.map((x) => x.toJson())) : [],
+        "lastDate"  : lastDate,
+        "uid"  : uid,
     };
 
       List<PieData> getYearlyDataSet() {

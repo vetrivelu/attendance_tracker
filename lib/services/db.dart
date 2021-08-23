@@ -10,7 +10,7 @@ CollectionReference<Map<String, Object>> users = firestore.collection('users');
 Future<void> addPerson({PersonModel person, String uid}) async {
   var data = person.toJson();
   users
-      .doc(uid)
+      .doc(person.uid)
       .set(data)
       .then((value) => print("Value added"))
       .catchError((error) => print("Error"));
@@ -27,21 +27,21 @@ Future<void> setAttendance({String uid}) async {
   var isNew = true;
 
   if(person.dates == null){
-    person.dates = [] as List<Date>;
+    person.dates = [];
   }
   for(int i=0;i<person.dates.length;i++){
     if(person.dates[i].date.day == date.day && person.dates[i].date.month == date.month && person.dates[i].date.year == date.year){
       isNew = false;
     }
   }
+      person.lastDate = date;
 
   if(isNew){
     person.dates.add(Date(date: date,status: true));
   } else {
     print("Already Set");
   }
-   person.totalpresents += 1;
-
+  person.totalpresents += 1;
   users.doc(uid).update(person.toJson());
 
 }
