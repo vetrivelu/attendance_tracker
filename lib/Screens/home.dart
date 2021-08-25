@@ -29,12 +29,11 @@ class _HomeState extends State<Home> {
   String _scanBarcode;
 
   getAttendanceonDate(DateTime date) {
-    var status = false;
+    var status = 0;
     if (widget.person.dates.isNotEmpty) {
       widget.person.dates.forEach((element) {
         if (isSameDay(date, element.date)) {
-          // print("status : ${element.status}");
-          status =  element.status;
+          status = element.status;
         }
       });
     }
@@ -49,27 +48,29 @@ class _HomeState extends State<Home> {
             BoxConstraints(minHeight: MediaQuery.of(context).size.height),
         child: Column(
           children: [
-            widget.person.isAdmin? null: Card(
-              child: SizedBox(
-                height: MediaQuery.of(context).size.width / 2,
-                width: MediaQuery.of(context).size.width,
-                child: Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      ElevatedButton(
-                        child: Icon(
-                          Icons.qr_code,
-                          size: 100,
+            widget.person.isAdmin
+                ? Container()
+                : Card(
+                    child: SizedBox(
+                      height: MediaQuery.of(context).size.width / 2,
+                      width: MediaQuery.of(context).size.width,
+                      child: Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            ElevatedButton(
+                              child: Icon(
+                                Icons.qr_code,
+                                size: 100,
+                              ),
+                              onPressed: scanQR,
+                            ),
+                            Text("Scan to register your attendance")
+                          ],
                         ),
-                        onPressed: scanQR,
                       ),
-                      Text("Scan to register your attendance")
-                    ],
+                    ),
                   ),
-                ),
-              ),
-            ),
             GetDashboard(widget: widget),
             SizedBox(height: 10),
             ExpansionTile(
@@ -82,10 +83,10 @@ class _HomeState extends State<Home> {
                   firstDay: firstDay,
                   focusedDay: _focusedDay,
                   lastDay: lastDay,
-                  onDaySelected: (selectedDay, focusedDay) {
-                  },
-                  calendarBuilders:
-                      CalendarBuilders(selectedBuilder:getSelectedBuilder , defaultBuilder: getDefaultBuilder),
+                  onDaySelected: (selectedDay, focusedDay) {},
+                  calendarBuilders: CalendarBuilders(
+                      selectedBuilder: getSelectedBuilder,
+                      defaultBuilder: getDefaultBuilder),
                 )
               ],
             ),
@@ -100,19 +101,25 @@ class _HomeState extends State<Home> {
       return NormalDay(
         day: day,
       );
-      var status = getAttendanceonDate(day);
-      print(status);
+    var status = getAttendanceonDate(day);
+    print(status);
     return Container(
       height: 40,
       width: 40,
       child: Center(
         child: Text(day.day.toString()),
       ),
-      decoration: status ? BoxDecoration(
-        color: Colors.yellow,
-        shape: BoxShape.rectangle,
-        borderRadius: BorderRadius.all(Radius.circular(100)),
-      ) : null,
+      decoration: (status == 2)
+          ? BoxDecoration(
+              color: Colors.yellow,
+              shape: BoxShape.rectangle,
+              borderRadius: BorderRadius.all(Radius.circular(100)),
+            )
+          : (status == 3) ? (BoxDecoration(
+              color: Colors.amber,
+              shape: BoxShape.rectangle,
+              borderRadius: BorderRadius.all(Radius.circular(100)),
+            )) : null,
     );
   }
 

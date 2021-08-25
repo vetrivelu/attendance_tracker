@@ -1,6 +1,7 @@
 import 'package:attendance_tracker/models/personModel.dart';
 // import 'package:attendance_tracker/services/auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:table_calendar/table_calendar.dart';
 // import 'package:provider/provider.dart';
 
 FirebaseFirestore firestore = FirebaseFirestore.instance;
@@ -29,21 +30,27 @@ Future<void> setAttendance({String uid}) async {
   if(person.dates == null){
     person.dates = [];
   }
-  for(int i=0;i<person.dates.length;i++){
-    if(person.dates[i].date.day == date.day && person.dates[i].date.month == date.month && person.dates[i].date.year == date.year){
-      isNew = false;
+ 
+
+  if(isSameDay(person.lastDate, date))
+  {
+    print("Date Already Set");
+  } else {
+    if(date.hour <= 10 && date.minute <15){
+      person.dates.add(Date(date: date,status: 1)); // Present
+      users.doc(uid).update({"dates" : FieldValue.arrayUnion(person.dates), "totalpresents" : FieldValue.increment(1)});
+      person.totalpresents += 1;
+    } else if (date.hour <= 2 && date.minute <15) {
+      person.dates.add(Date(date: date,status: 3)); // half-day
+      users.doc(uid).update({"dates" : FieldValue.arrayUnion(person.dates), "totalhalfDays" : FieldValue.increment(1)});
+      person.totalhalfDays += 1;
+    } else {
+      person.dates.add(Date(date: date,status: 2)); //  late
+      users.doc(uid).update({"dates" : FieldValue.arrayUnion(person.dates), "totallates" : FieldValue.increment(1)});
+      person.totallates += 1;
     }
   }
-      person.lastDate = date;
-
-  if(isNew){
-    person.dates.add(Date(date: date,status: true));
-  } else {
-    print("Already Set");
-  }
-  person.totalpresents += 1;
   users.doc(uid).update(person.toJson());
-
 }
 
 Stream<DocumentSnapshot<Map<String,Object>>> getPersonProfile(String uid) {
@@ -55,4 +62,6 @@ Stream<QuerySnapshot<Map<String,Object>>> getPeople() {
   Stream collectionStream = users.snapshots();
   return collectionStream;
 }
+
+
 

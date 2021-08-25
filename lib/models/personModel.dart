@@ -127,7 +127,7 @@ class Date {
     });
 
     DateTime date;
-    bool status;
+    int status;
 
     factory Date.fromJson(Map<String, dynamic> json) => Date(
         date: DateTime.parse(json["date"].toDate().toString()),

@@ -2,7 +2,6 @@ import 'package:attendance_tracker/Screens/homePage.dart';
 import 'package:attendance_tracker/models/personModel.dart';
 import 'package:attendance_tracker/services/auth.dart';
 import 'package:attendance_tracker/Screens/loginScreen.dart';
-import 'package:attendance_tracker/services/db.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
