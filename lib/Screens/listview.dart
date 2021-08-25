@@ -1,5 +1,4 @@
 import 'package:attendance_tracker/Screens/PersonProfile.dart';
-import 'package:attendance_tracker/Screens/home.dart';
 import 'package:attendance_tracker/models/personModel.dart';
 import 'package:attendance_tracker/services/db.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';

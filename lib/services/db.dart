@@ -25,7 +25,6 @@ Future<void> setAttendance({String uid}) async {
   var date = DateTime.now().toUtc();
   var doc = await users.doc(uid).get();
   var person = PersonModel.fromJson(doc.data());
-  var isNew = true;
 
   if(person.dates == null){
     person.dates = [];
