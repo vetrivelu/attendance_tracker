@@ -1,5 +1,6 @@
 import 'package:attendance_tracker/models/personModel.dart';
 import 'package:attendance_tracker/services/Encrypt.dart';
+import 'package:attendance_tracker/services/auth.dart';
 import 'package:attendance_tracker/services/db.dart';
 import 'package:attendance_tracker/widgets/dashboard.dart';
 
@@ -10,17 +11,18 @@ import 'package:table_calendar/table_calendar.dart';
 
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 
-class Home extends StatefulWidget {
-  const Home({
-    Key key,
+class StaffHome extends StatefulWidget {
+  const StaffHome({
     this.person,
-  }) : super(key: key);
+    this.auth,
+  });
   final PersonModel person;
+  final AuthenticationService auth;
   @override
-  _HomeState createState() => _HomeState();
+  _StaffHomeState createState() => _StaffHomeState();
 }
 
-class _HomeState extends State<Home> {
+class _StaffHomeState extends State<StaffHome> {
   var firstDay = DateTime.utc(2021, 1, 1);
   var lastDay = DateTime.utc(2022, 1, 1);
   var _focusedDay = DateTime.now();
@@ -42,55 +44,67 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: ConstrainedBox(
-        constraints:
-            BoxConstraints(minHeight: MediaQuery.of(context).size.height),
-        child: Column(
-          children: [
-            widget.person.isAdmin
-                ? Container()
-                : Card(
-                    child: SizedBox(
-                      height: MediaQuery.of(context).size.width / 2,
-                      width: MediaQuery.of(context).size.width,
-                      child: Center(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            ElevatedButton(
-                              child: Icon(
-                                Icons.qr_code,
-                                size: 100,
-                              ),
-                              onPressed: scanQR,
+    return Scaffold(
+      body: SafeArea(
+        child: SingleChildScrollView(
+          child: ConstrainedBox(
+            constraints:
+                BoxConstraints(minHeight: MediaQuery.of(context).size.height),
+            child: Column(
+              children: [
+                widget.person.isAdmin
+                    ? Container()
+                    : Card(
+                        child: SizedBox(
+                          height: MediaQuery.of(context).size.width / 2,
+                          width: MediaQuery.of(context).size.width,
+                          child: Center(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                ElevatedButton(
+                                  child: Icon(
+                                    Icons.qr_code,
+                                    size: 100,
+                                  ),
+                                  onPressed: scanQR,
+                                ),
+                                Text("Scan to register your attendance")
+                              ],
                             ),
-                            Text("Scan to register your attendance")
-                          ],
+                          ),
                         ),
                       ),
-                    ),
-                  ),
-            GetDashboard(widget: widget),
-            SizedBox(height: 10),
-            ExpansionTile(
-              title: Text("Calendar"),
-              leading: Icon(Icons.calendar_view_month),
-              maintainState: true,
-              initiallyExpanded: true,
-              children: [
-                TableCalendar(
-                  firstDay: firstDay,
-                  focusedDay: _focusedDay,
-                  lastDay: lastDay,
-                  onDaySelected: (selectedDay, focusedDay) {},
-                  calendarBuilders: CalendarBuilders(
-                      selectedBuilder: getSelectedBuilder,
-                      defaultBuilder: getDefaultBuilder),
-                )
+                ExpansionTile(
+                  title: Text("Dashboard"),
+                  initiallyExpanded: widget.person.isAdmin,
+                  leading: Icon(Icons.dashboard),
+                  // maintainState: true,
+                  children: [
+                    Dashboard(person: widget.person),
+                  ],
+                ),
+                SizedBox(height: 10),
+                ExpansionTile(
+                  title: Text("Calendar"),
+                  leading: Icon(Icons.calendar_view_month),
+                  maintainState: true,
+                  initiallyExpanded: true,
+                  children: [
+                    TableCalendar(
+                      firstDay: firstDay,
+                      focusedDay: _focusedDay,
+                      lastDay: lastDay,
+                      onDaySelected: (selectedDay, focusedDay) {},
+                      calendarBuilders: CalendarBuilders(
+                          selectedBuilder: getSelectedBuilder,
+                          defaultBuilder: getDefaultBuilder),
+                    )
+                  ],
+                ),
               ],
             ),
-          ],
+          ),
         ),
       ),
     );
@@ -115,11 +129,13 @@ class _HomeState extends State<Home> {
               shape: BoxShape.rectangle,
               borderRadius: BorderRadius.all(Radius.circular(100)),
             )
-          : (status == 3) ? (BoxDecoration(
-              color: Colors.amber,
-              shape: BoxShape.rectangle,
-              borderRadius: BorderRadius.all(Radius.circular(100)),
-            )) : null,
+          : (status == 3)
+              ? (BoxDecoration(
+                  color: Colors.amber,
+                  shape: BoxShape.rectangle,
+                  borderRadius: BorderRadius.all(Radius.circular(100)),
+                ))
+              : null,
     );
   }
 
@@ -158,27 +174,7 @@ class _HomeState extends State<Home> {
       _scanBarcode = barcodeScanRes;
     });
   }
-}
 
-class GetDashboard extends StatelessWidget {
-  const GetDashboard({
-    Key key,
-    @required this.widget,
-  }) : super(key: key);
-
-  final Home widget;
-
-  @override
-  Widget build(BuildContext context) {
-    return ExpansionTile(
-      title: Text("Dashboard"),
-      leading: Icon(Icons.dashboard),
-      // maintainState: true,
-      children: [
-        Dashboard(person: widget.person),
-      ],
-    );
-  }
 }
 
 class NormalDay extends StatelessWidget {

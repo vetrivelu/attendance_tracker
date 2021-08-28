@@ -1,5 +1,5 @@
 import 'package:attendance_tracker/services/auth.dart';
-import 'package:attendance_tracker/widgets/landingPage.dart';
+import 'package:attendance_tracker/widgets/route.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -19,7 +19,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: ChangeNotifierProvider<AuthenticationService>(create: (context) => AuthenticationService(),child: LandingPage(),)
+      home: ChangeNotifierProvider<AuthenticationService>(create: (context) => AuthenticationService(),child: AuthRoute(),)
     );
   }
 }

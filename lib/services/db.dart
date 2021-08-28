@@ -39,7 +39,7 @@ Future<void> setAttendance({String uid}) async {
       person.dates.add(Date(date: date,status: 1)); // Present
       users.doc(uid).update({"dates" : FieldValue.arrayUnion(person.dates), "totalpresents" : FieldValue.increment(1)});
       person.totalpresents += 1;
-    } else if (date.hour <= 2 && date.minute <15) {
+    } else if (date.hour <= 1 && date.minute <= 0) {
       person.dates.add(Date(date: date,status: 3)); // half-day
       users.doc(uid).update({"dates" : FieldValue.arrayUnion(person.dates), "totalhalfDays" : FieldValue.increment(1)});
       person.totalhalfDays += 1;

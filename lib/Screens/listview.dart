@@ -1,4 +1,4 @@
-import 'package:attendance_tracker/Screens/PersonProfile.dart';
+import 'package:attendance_tracker/Screens/staffHome.dart';
 import 'package:attendance_tracker/models/personModel.dart';
 import 'package:attendance_tracker/services/db.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -31,7 +31,7 @@ class ListPeople extends StatelessWidget {
                 onTap: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => PersonProfile(person: PersonModel.fromJson(data),)),
+                    MaterialPageRoute(builder: (context) => StaffHome(person: PersonModel.fromJson(data),),)
                   );
                 },
                 child: Card(
