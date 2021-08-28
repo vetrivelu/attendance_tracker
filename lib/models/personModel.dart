@@ -4,63 +4,66 @@
 
 import 'dart:convert';
 
+import 'package:attendance_tracker/services/db.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:table_calendar/table_calendar.dart';
 
-PersonModel personModelFromJson(String str) => PersonModel.fromJson(json.decode(str));
+PersonModel personModelFromJson(String str) =>
+    PersonModel.fromJson(json.decode(str));
 
 String personModelToJson(PersonModel data) => json.encode(data.toJson());
 
-class PersonModel with ChangeNotifier{
-    PersonModel({
-        this.name,
-        this.phone,
-        this.isAdmin = false,
-        this.totalpresents = 0,
-        this.totallates = 0,
-        this.totalhalfDays= 0,
-        this.totalLeaves = 0,
-        this.totalHolidays= 0,
-        this.totalUnassigned= 0,
-        this.dates,
-        this.lastDate,
-        this.uid, 
-        // this.march,
-        // this.april, 
-        // this.may,
-        // this.june, 
-        // this.july,
-        // this.august, 
-        // this.september,
-        // this.october, 
-        // this.november,
-        // this.december, 
-    });
+class PersonModel with ChangeNotifier {
+  PersonModel({
+    this.name,
+    this.phone,
+    this.isAdmin = false,
+    this.totalpresents = 0,
+    this.totallates = 0,
+    this.totalhalfDays = 0,
+    this.totalLeaves = 0,
+    this.totalHolidays = 0,
+    this.totalUnassigned = 0,
+    this.dates,
+    this.lastDate,
+    this.uid,
+    // this.march,
+    // this.april,
+    // this.may,
+    // this.june,
+    // this.july,
+    // this.august,
+    // this.september,
+    // this.october,
+    // this.november,
+    // this.december,
+  });
 
-    String name;
-    String phone;
-    bool isAdmin;
-    int totalpresents;
-    int totallates;
-    int totalhalfDays;
-    int totalLeaves;
-    int totalHolidays;
-    int totalUnassigned;
-    List<Date> dates;
-    DateTime lastDate;
-    String uid;
-    // List<Month> february;
-    // List<Month> march;
-    // List<Month> april;
-    // List<Month> may;
-    // List<Month> june;
-    // List<Month> july;
-    // List<Month> august;
-    // List<Month> september;
-    // List<Month> october;
-    // List<Month> november;
-    // List<Month> december;
+  String name;
+  String phone;
+  bool isAdmin;
+  int totalpresents;
+  int totallates;
+  int totalhalfDays;
+  int totalLeaves;
+  int totalHolidays;
+  int totalUnassigned;
+  List<Date> dates;
+  DateTime lastDate;
+  String uid;
+  // List<Month> february;
+  // List<Month> march;
+  // List<Month> april;
+  // List<Month> may;
+  // List<Month> june;
+  // List<Month> july;
+  // List<Month> august;
+  // List<Month> september;
+  // List<Month> october;
+  // List<Month> november;
+  // List<Month> december;
 
-    factory PersonModel.fromJson(Map<String, dynamic> json) => PersonModel(
+  factory PersonModel.fromJson(Map<String, dynamic> json) => PersonModel(
         name: json["name"],
         phone: json["phone"],
         isAdmin: json["isAdmin"],
@@ -70,7 +73,9 @@ class PersonModel with ChangeNotifier{
         totalLeaves: json["totalLeaves"],
         totalHolidays: json["totalHolidays"],
         totalUnassigned: json["totalUnassigned"],
-        dates: json["dates"]!=null?List<Date>.from(json["dates"].map((x) => Date.fromJson(x))) : null,
+        dates: json["dates"] != null
+            ? List<Date>.from(json["dates"].map((x) => Date.fromJson(x)))
+            : null,
         lastDate: DateTime.parse(json["lastDate"].toDate().toString()),
         uid: json["uid"],
         // february: List<Month>.from(json["february"].map((x) => Month.fromJson(x))),
@@ -84,9 +89,9 @@ class PersonModel with ChangeNotifier{
         // october: List<Month>.from(json["october"].map((x) => Month.fromJson(x))),
         // november: List<Month>.from(json["november"].map((x) => Month.fromJson(x))),
         // december: List<Month>.from(json["december"].map((x) => Month.fromJson(x))),
-    );
+      );
 
-    Map<String, dynamic> toJson() => {
+  Map<String, dynamic> toJson() => {
         "name": name,
         "phone": phone,
         "isAdmin": isAdmin,
@@ -96,65 +101,124 @@ class PersonModel with ChangeNotifier{
         "totalLeaves": totalLeaves,
         "totalHolidays": totalHolidays,
         "totalUnassigned": totalUnassigned,
-        "dates": dates != null?List<dynamic>.from(dates.map((x) => x.toJson())) : [],
-        "lastDate"  : lastDate,
-        "uid"  : uid,
-    };
+        "dates": dates != null
+            ? List<dynamic>.from(dates.map((x) => x.toJson()))
+            : [],
+        "lastDate": lastDate,
+        "uid": uid,
+      };
 
-      List<PieData> getYearlyDataSet() {
-        List<PieData> dataSet = [];
-        dataSet.add(PieData("totalpresents",this.totalpresents, this.totalpresents.toString() ));
-        dataSet.add(PieData("totallates",this.totallates, this.totallates.toString()));
-        dataSet.add(PieData("totalhalfDays",this.totalhalfDays, this.totalhalfDays.toString()));
-        dataSet.add(PieData("totalLeaves",this.totalLeaves, this.totalLeaves.toString()));
-        dataSet.add(PieData("totalHolidays",this.totalHolidays, this.totalHolidays.toString()));
-      return dataSet;
+  List<PieData> getYearlyDataSet() {
+    List<PieData> dataSet = [];
+    dataSet.add(PieData(
+        "totalpresents", this.totalpresents, this.totalpresents.toString()));
+    dataSet.add(
+        PieData("totallates", this.totallates, this.totallates.toString()));
+    dataSet.add(PieData(
+        "totalhalfDays", this.totalhalfDays, this.totalhalfDays.toString()));
+    dataSet.add(
+        PieData("totalLeaves", this.totalLeaves, this.totalLeaves.toString()));
+    dataSet.add(PieData(
+        "totalAbsents", this.totalUnassigned, this.totalUnassigned.toString()));
+    return dataSet;
+  }
+
+  bool getTodaysAttendance() {
+    bool status = false;
+    if (lastDate.year == DateTime.now().year &&
+        lastDate.month == DateTime.now().month &&
+        lastDate.day == DateTime.now().month) {
+      status = true;
     }
+    return status;
+  }
 
-    bool getTodaysAttendance(){
-      bool status =false;
-        if(lastDate.year == DateTime.now().year && lastDate.month == DateTime.now().month && lastDate.day == DateTime.now().month){
-          status = true;
+  void addAttendance(Date date) {
+    bool isAvailable = false;
+    this.dates.forEach((element) {
+      if (isSameDay(element.date, date.date)) {
+        isAvailable = true;
       }
-      return status;
+    });
+    if (!isAvailable) {
+      this.dates.add(date);
     }
+  }
+
+  void setLeave(DateTime date) {
+    this.addAttendance(Date(date: date, status: 4));
+    this.totalLeaves += 1;
+  }
+
+  void setAttendance() {
+    var date = DateTime.now().toUtc();
+
+    if (this.dates == null) {
+      this.dates = [];
+    }
+
+    if (isSameDay(this.lastDate, date)) {
+      print("Date Already Set");
+    } else {
+      if (date.hour <= 10 && date.minute < 15) {
+        this.dates.add(Date(date: date, status: 1)); // Present
+        // users.doc(uid).update({"dates" : FieldValue.arrayUnion(person.dates), "totalpresents" : FieldValue.increment(1)});
+        this.totalpresents += 1;
+      } else if ((date.hour >= 10 && date.minute >= 15) && (date.hour < 13)) {
+        this.dates.add(Date(date: date, status: 2)); // half-day
+        // users.doc(uid).update({"dates" : FieldValue.arrayUnion(person.dates), "totallates" : FieldValue.increment(1)});
+        this.totalhalfDays += 1;
+      } else if (date.hour > 13 && date.hour < 14) {
+        this.dates.add(Date(date: date, status: 3)); //  late
+        // users.doc(uid).update({"dates" : FieldValue.arrayUnion(person.dates), "totalhalfDays" : FieldValue.increment(1)});
+        this.totallates += 1;
+      } else {
+        this.dates.add(Date(date: date, status: 5)); //  late
+        // users.doc(uid).update({"dates" : FieldValue.arrayUnion(person.dates), "totalUnassigned" : FieldValue.increment(1)});
+        this.totallates += 1;
+      }
+    }
+  }
+
+  getCalendarAttendance(int month){
+    var calendarStatus = [];
+    for(int i=0;i<31;i++) { calendarStatus.add(0);};
+    this.dates.forEach((element) {
+      calendarStatus[element.date.day] = element.status;
+    });
+  }
+
 }
 
 class Date {
-    Date({
-        this.date,
-        this.status,
-    });
+  Date({
+    this.date,
+    this.status,
+  });
 
-    DateTime date;
-    int status;
+  DateTime date;
+  int status;
 
-    factory Date.fromJson(Map<String, dynamic> json) => Date(
+  factory Date.fromJson(Map<String, dynamic> json) => Date(
         date: DateTime.parse(json["date"].toDate().toString()),
         status: json["status"],
-    );
+      );
 
-    Map<String, dynamic> toJson() => {
+  Map<String, dynamic> toJson() => {
         "date": date,
         "status": status,
-    };
+      };
 }
 
-
-
-
-
-class PieData{
-
- final String xData;
- final num yData;
- final String text;
+class PieData {
+  final String xData;
+  final num yData;
+  final String text;
 
   PieData(this.xData, this.yData, this.text);
-
 }
 
-class StatsonDate{
+class StatsonDate {
   DateTime date;
   int status;
 }

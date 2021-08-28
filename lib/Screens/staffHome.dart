@@ -26,6 +26,12 @@ class _StaffHomeState extends State<StaffHome> {
   var firstDay = DateTime.utc(2021, 1, 1);
   var lastDay = DateTime.utc(2022, 1, 1);
   var _focusedDay = DateTime.now();
+  var calendarStatus;
+  @override
+  void initState() {
+    super.initState();
+    calendarStatus = widget.person.getCalendarAttendance(DateTime.now().month);
+  }
 
   // ignore: unused_field
   String _scanBarcode;
@@ -44,7 +50,9 @@ class _StaffHomeState extends State<StaffHome> {
 
   @override
   Widget build(BuildContext context) {
+    var tick = widget.person.getTodaysAttendance();
     return Scaffold(
+      floatingActionButton: FloatingActionButton(onPressed: widget.auth.logout, child: Icon(Icons.logout),),
       body: SafeArea(
         child: SingleChildScrollView(
           child: ConstrainedBox(
@@ -64,12 +72,12 @@ class _StaffHomeState extends State<StaffHome> {
                               children: [
                                 ElevatedButton(
                                   child: Icon(
-                                    Icons.qr_code,
+                                    tick ? Icons.done : Icons.qr_code,
                                     size: 100,
                                   ),
-                                  onPressed: scanQR,
+                                  onPressed: tick? (){} :  scanQR,
                                 ),
-                                Text("Scan to register your attendance")
+                                Text(tick? "Attendance Registerd" : "Scan to register your attendance")
                               ],
                             ),
                           ),
@@ -95,10 +103,37 @@ class _StaffHomeState extends State<StaffHome> {
                       firstDay: firstDay,
                       focusedDay: _focusedDay,
                       lastDay: lastDay,
-                      onDaySelected: (selectedDay, focusedDay) {},
+                      onDaySelected: (selectedDay, focusedDay) {
+                        return showDialog(
+                          context: context,
+                          builder: (ctx) => AlertDialog(
+                            title: Text("Alert Dialog Box"),
+                            content: Text(
+                                "Apply leave on ${selectedDay.year}-${selectedDay.month}-${selectedDay.day} ?"),
+                            actions: <Widget>[
+                              ElevatedButton(
+                                onPressed: () {
+                                  Navigator.of(ctx).pop();
+                                },
+                                child: Text("Cancel"),
+                              ),
+                              ElevatedButton(
+                                onPressed: () {
+                                  widget.person.setLeave(selectedDay);
+                                  updatePerson(widget.person);
+                                  Navigator.of(ctx).pop();
+                                },
+                                child: Text("okay"),
+                              ),
+                            ],
+                          ),
+                        );
+                      },
                       calendarBuilders: CalendarBuilders(
                           selectedBuilder: getSelectedBuilder,
-                          defaultBuilder: getDefaultBuilder),
+                          defaultBuilder: getDefaultBuilder,
+                          todayBuilder: getDefaultBuilder,
+                          ),
                     )
                   ],
                 ),
@@ -111,31 +146,36 @@ class _StaffHomeState extends State<StaffHome> {
   }
 
   Widget getDefaultBuilder(context, DateTime day, _) {
+    var color;
+    var status = 0;
     if (day.weekday == DateTime.sunday)
       return NormalDay(
         day: day,
       );
-    var status = getAttendanceonDate(day);
+    if (calendarStatus != null) {
+      status = calendarStatus[day.day];
+    } else
+      status = getAttendanceonDate(day);
+
     print(status);
+    switch (status) {
+      case 1: color = Colors.greenAccent; break;
+      case 2: color = Colors.indigoAccent; break;
+      case 3: color = Colors.yellowAccent; break;
+      case 4: color = Colors.orangeAccent; break;
+      default : if(day.isAfter(DateTime.now())) color = Colors.white10; else color = Colors.redAccent;
+    }
     return Container(
       height: 40,
       width: 40,
       child: Center(
         child: Text(day.day.toString()),
       ),
-      decoration: (status == 2)
-          ? BoxDecoration(
-              color: Colors.yellow,
+      decoration: BoxDecoration(
+              color: color,
               shape: BoxShape.rectangle,
               borderRadius: BorderRadius.all(Radius.circular(100)),
             )
-          : (status == 3)
-              ? (BoxDecoration(
-                  color: Colors.amber,
-                  shape: BoxShape.rectangle,
-                  borderRadius: BorderRadius.all(Radius.circular(100)),
-                ))
-              : null,
     );
   }
 
@@ -143,6 +183,7 @@ class _StaffHomeState extends State<StaffHome> {
     return Container(
       height: 35,
       width: 35,
+      color: Colors.grey,
       child: Center(
         child: Text(day.day.toString()),
       ),
@@ -158,8 +199,8 @@ class _StaffHomeState extends State<StaffHome> {
       if (barcodeScanRes.isNotEmpty) {
         var decrypted = Encryptor.decrypt(barcodeScanRes);
         var date = DateTime.parse(decrypted);
-        if (isSameDay(date, DateTime.now()))
-          setAttendance(uid: widget.person.uid);
+        if (isSameDay(date, DateTime.now())) widget.person.setAttendance();
+        updatePerson(widget.person);
       }
     } on PlatformException {
       barcodeScanRes = 'Failed to get platform version.';
@@ -174,7 +215,6 @@ class _StaffHomeState extends State<StaffHome> {
       _scanBarcode = barcodeScanRes;
     });
   }
-
 }
 
 class NormalDay extends StatelessWidget {

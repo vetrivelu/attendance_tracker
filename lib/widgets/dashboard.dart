@@ -11,6 +11,7 @@ class Dashboard extends StatelessWidget {
     // ignore: todo
     // TODO: implement build
     return SfCircularChart(
+      palette: [Colors.green, Colors.indigo, Colors.yellow, Colors.amber, Colors.red],
    title: ChartTitle(text: 'Attendance'),
    legend: Legend(isVisible: true),
    series: <PieSeries<PieData, String>>[
