@@ -3,7 +3,6 @@
 //     final personModel = personModelFromJson(jsonString);
 
 import 'dart:convert';
-
 import 'package:attendance_tracker/services/db.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:table_calendar/table_calendar.dart';
@@ -150,44 +149,61 @@ class PersonModel with ChangeNotifier {
     this.totalLeaves += 1;
   }
 
-  void setAttendance() {
-    var date = DateTime.now().toUtc();
+  String setAttendance() {
+    var date = DateTime.now();
+
+    var returnMessage = '';
+
+    // var moonLanding = DateTime.parse("1969-07-20 20:18:04Z");
 
     if (this.dates == null) {
       this.dates = [];
     }
 
     if (isSameDay(this.lastDate, date)) {
-      print("Date Already Set");
+      returnMessage = "Attendance already set";
     } else {
-      if (date.hour <= 10 && date.minute < 15) {
+      if (date.hour < 10) {
         this.dates.add(Date(date: date, status: 1)); // Present
-        // users.doc(uid).update({"dates" : FieldValue.arrayUnion(person.dates), "totalpresents" : FieldValue.increment(1)});
         this.totalpresents += 1;
-      } else if ((date.hour >= 10 && date.minute >= 15) && (date.hour < 13)) {
-        this.dates.add(Date(date: date, status: 2)); // half-day
+        this.lastDate = date;
+        returnMessage = "Attendance Set";
+        // users.doc(uid).update({"dates" : FieldValue.arrayUnion(person.dates), "totalpresents" : FieldValue.increment(1)});
+      } else if (date.hour < 12) {
+        this.dates.add(Date(date: date, status: 2)); // late
+        this.totallates += 1;
+        this.lastDate = date;
+        returnMessage = "Late Attendance Set";
         // users.doc(uid).update({"dates" : FieldValue.arrayUnion(person.dates), "totallates" : FieldValue.increment(1)});
+      } else if (date.hour < 14) {
+        this.dates.add(Date(date: date, status: 3)); //  HalfDAy
         this.totalhalfDays += 1;
-      } else if (date.hour > 13 && date.hour < 14) {
-        this.dates.add(Date(date: date, status: 3)); //  late
+        this.lastDate = date;
+        returnMessage = "Half-day Deducted";
         // users.doc(uid).update({"dates" : FieldValue.arrayUnion(person.dates), "totalhalfDays" : FieldValue.increment(1)});
-        this.totallates += 1;
       } else {
-        this.dates.add(Date(date: date, status: 5)); //  late
-        // users.doc(uid).update({"dates" : FieldValue.arrayUnion(person.dates), "totalUnassigned" : FieldValue.increment(1)});
-        this.totallates += 1;
+        returnMessage = "Time Exceeded, Couldn't Place attendance";
       }
     }
+    try{
+      updatePerson(this);
+    } catch (e) {
+      returnMessage = "${e.message}"; 
+    }
+    return returnMessage;
+      
   }
 
-  getCalendarAttendance(int month){
+  getCalendarAttendance(int month) {
     var calendarStatus = [];
-    for(int i=0;i<31;i++) { calendarStatus.add(0);};
+    for (int i = 0; i < 31; i++) {
+      calendarStatus.add(0);
+    }
+    ;
     this.dates.forEach((element) {
       calendarStatus[element.date.day] = element.status;
     });
   }
-
 }
 
 class Date {

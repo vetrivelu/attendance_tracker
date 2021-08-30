@@ -19,34 +19,38 @@ class ListPeople extends StatelessWidget {
 
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Text("Loading");
-          }
+          } else if (snapshot.connectionState == ConnectionState.active && snapshot.hasData) {
 
-          return ListView(
-            physics:
-                BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
-            children: snapshot.data.docs.map((DocumentSnapshot document) {
-              Map<String, dynamic> data =
-                  document.data() as Map<String, dynamic>;
-              return GestureDetector(
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => StaffHome(person: PersonModel.fromJson(data),),)
-                  );
-                },
-                child: Card(
-                  child: ListTile(
-                    leading: Icon(Icons.person),
-                    title: Text(data['name']),
-                    subtitle: Text(
-                        DateTime.parse(data['lastDate'].toDate().toString())
-                            .toString()),
-                    tileColor: Colors.indigo.shade200,
+            return ListView(
+              physics: BouncingScrollPhysics(
+                  parent: AlwaysScrollableScrollPhysics()),
+              children: snapshot.data.docs.map((DocumentSnapshot document) {
+                Map<String, dynamic> data = document.data() as Map<String, dynamic>;
+                return GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => StaffHome(
+                            person: PersonModel.fromJson(data),
+                          ),
+                        ));
+                  },
+                  child: Card(
+                    child: ListTile(
+                      leading: Icon(Icons.person),
+                      title: Text(data['name']),
+                      subtitle: Text(
+                          DateTime.parse(data['lastDate'].toDate().toString())
+                              .toString()),
+                      tileColor: Colors.indigo.shade200,
+                    ),
                   ),
-                ),
-              );
-            }).toList(),
-          );
+                );
+              }).toList(),
+            );
+          }
+          return Text("Something went Wrong");
         },
       ),
     );

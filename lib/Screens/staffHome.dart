@@ -35,6 +35,7 @@ class _StaffHomeState extends State<StaffHome> {
 
   // ignore: unused_field
   String _scanBarcode;
+  String returnMessage;
 
   getAttendanceonDate(DateTime date) {
     var status = 0;
@@ -50,9 +51,12 @@ class _StaffHomeState extends State<StaffHome> {
 
   @override
   Widget build(BuildContext context) {
-    var tick = widget.person.getTodaysAttendance();
     return Scaffold(
-      floatingActionButton: FloatingActionButton(onPressed: widget.auth.logout, child: Icon(Icons.logout),),
+      floatingActionButton: FloatingActionButton(
+        onPressed: widget.auth.logout,
+        child: Icon(Icons.logout),
+      ),
+      // floatingActionButtonLocation: FloatingActionButtonLocatio,
       body: SafeArea(
         child: SingleChildScrollView(
           child: ConstrainedBox(
@@ -71,13 +75,21 @@ class _StaffHomeState extends State<StaffHome> {
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: [
                                 ElevatedButton(
-                                  child: Icon(
-                                    tick ? Icons.done : Icons.qr_code,
-                                    size: 100,
-                                  ),
-                                  onPressed: tick? (){} :  scanQR,
-                                ),
-                                Text(tick? "Attendance Registerd" : "Scan to register your attendance")
+                                    child: Icon(
+                                      isSameDay(DateTime.now(),
+                                              widget.person.lastDate)
+                                          ? Icons.done
+                                          : Icons.qr_code,
+                                      size: 100,
+                                    ),
+                                    onPressed: isSameDay(DateTime.now(),
+                                            widget.person.lastDate)
+                                        ? () {}
+                                        : scanQR),
+                                Text(isSameDay(
+                                        DateTime.now(), widget.person.lastDate)
+                                    ? "Attendance Registerd"
+                                    : "Scan to register your attendance")
                               ],
                             ),
                           ),
@@ -104,36 +116,38 @@ class _StaffHomeState extends State<StaffHome> {
                       focusedDay: _focusedDay,
                       lastDay: lastDay,
                       onDaySelected: (selectedDay, focusedDay) {
-                        return showDialog(
-                          context: context,
-                          builder: (ctx) => AlertDialog(
-                            title: Text("Alert Dialog Box"),
-                            content: Text(
-                                "Apply leave on ${selectedDay.year}-${selectedDay.month}-${selectedDay.day} ?"),
-                            actions: <Widget>[
-                              ElevatedButton(
-                                onPressed: () {
-                                  Navigator.of(ctx).pop();
-                                },
-                                child: Text("Cancel"),
-                              ),
-                              ElevatedButton(
-                                onPressed: () {
-                                  widget.person.setLeave(selectedDay);
-                                  updatePerson(widget.person);
-                                  Navigator.of(ctx).pop();
-                                },
-                                child: Text("okay"),
-                              ),
-                            ],
-                          ),
-                        );
+                        var status = getAttendanceonDate(selectedDay);
+                        if (status == 0)
+                          return showDialog(
+                            context: context,
+                            builder: (ctx) => AlertDialog(
+                              title: Text("Alert Dialog Box"),
+                              content: Text(
+                                  "Apply leave on ${selectedDay.year}-${selectedDay.month}-${selectedDay.day} ?"),
+                              actions: <Widget>[
+                                ElevatedButton(
+                                  onPressed: () {
+                                    Navigator.of(ctx).pop();
+                                  },
+                                  child: Text("Cancel"),
+                                ),
+                                ElevatedButton(
+                                  onPressed: () {
+                                    widget.person.setLeave(selectedDay);
+                                    updatePerson(widget.person);
+                                    Navigator.of(ctx).pop();
+                                  },
+                                  child: Text("okay"),
+                                ),
+                              ],
+                            ),
+                          );
                       },
                       calendarBuilders: CalendarBuilders(
-                          selectedBuilder: getSelectedBuilder,
-                          defaultBuilder: getDefaultBuilder,
-                          todayBuilder: getDefaultBuilder,
-                          ),
+                        selectedBuilder: getSelectedBuilder,
+                        defaultBuilder: getDefaultBuilder,
+                        todayBuilder: getDefaultBuilder,
+                      ),
                     )
                   ],
                 ),
@@ -159,24 +173,35 @@ class _StaffHomeState extends State<StaffHome> {
 
     print(status);
     switch (status) {
-      case 1: color = Colors.greenAccent; break;
-      case 2: color = Colors.indigoAccent; break;
-      case 3: color = Colors.yellowAccent; break;
-      case 4: color = Colors.orangeAccent; break;
-      default : if(day.isAfter(DateTime.now())) color = Colors.white10; else color = Colors.redAccent;
+      case 1:
+        color = Colors.greenAccent;
+        break;
+      case 2:
+        color = Colors.indigoAccent;
+        break;
+      case 3:
+        color = Colors.yellowAccent;
+        break;
+      case 4:
+        color = Colors.orangeAccent;
+        break;
+      default:
+        if (day.isAfter(DateTime.now()))
+          color = Colors.white10;
+        else
+          color = Colors.redAccent;
     }
     return Container(
-      height: 40,
-      width: 40,
-      child: Center(
-        child: Text(day.day.toString()),
-      ),
-      decoration: BoxDecoration(
-              color: color,
-              shape: BoxShape.rectangle,
-              borderRadius: BorderRadius.all(Radius.circular(100)),
-            )
-    );
+        height: 40,
+        width: 40,
+        child: Center(
+          child: Text(day.day.toString()),
+        ),
+        decoration: BoxDecoration(
+          color: color,
+          shape: BoxShape.rectangle,
+          borderRadius: BorderRadius.all(Radius.circular(100)),
+        ));
   }
 
   Widget getSelectedBuilder(context, day, _) {
@@ -196,11 +221,14 @@ class _StaffHomeState extends State<StaffHome> {
     try {
       barcodeScanRes = await FlutterBarcodeScanner.scanBarcode(
           '#ff6666', 'Cancel', true, ScanMode.QR);
+      print(barcodeScanRes);
       if (barcodeScanRes.isNotEmpty) {
         var decrypted = Encryptor.decrypt(barcodeScanRes);
         var date = DateTime.parse(decrypted);
-        if (isSameDay(date, DateTime.now())) widget.person.setAttendance();
-        updatePerson(widget.person);
+
+        if (isSameDay(date, DateTime.now()))
+          // ignore: await_only_futures
+          returnMessage = await widget.person.setAttendance();
       }
     } on PlatformException {
       barcodeScanRes = 'Failed to get platform version.';

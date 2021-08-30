@@ -1,8 +1,5 @@
 import 'package:attendance_tracker/models/personModel.dart';
-// import 'package:attendance_tracker/services/auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:table_calendar/table_calendar.dart';
-// import 'package:provider/provider.dart';
 
 FirebaseFirestore firestore = FirebaseFirestore.instance;
 CollectionReference<Map<String, Object>> users = firestore.collection('users');
