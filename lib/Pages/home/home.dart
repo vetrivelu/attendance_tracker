@@ -147,14 +147,17 @@ class _EmployeeHomaPageState extends State<EmployeeHomaPage> {
         //   label: Text('Send Notification'),
         // ),
         appBar: AppBar(
-          leading: Image.asset('assets/logo.png'),
+          leading: Padding(
+            padding: const EdgeInsets.only(left: 8.0),
+            child: Image.asset('assets/logo.png'),
+          ),
           title: Row(
             children: [
-              Text('Safe@Work'),
+              // Text('SAFE@CAMPUS'),
               Spacer(),
               InkWell(
                   child: Text('Logout',
-                      style: TextStyle(color: Colors.white, fontSize: 14)),
+                      style: TextStyle(color: Colors.black, fontSize: 14)),
                   onTap: () {
                     AuthenticationService().logout();
                   }),

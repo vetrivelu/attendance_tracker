@@ -19,7 +19,7 @@ class _ProfileState extends State<Profile> {
     Employee data;
     return SafeArea(
       child: Scaffold(
-        backgroundColor: Color(0xFF111443),
+        backgroundColor: Colors.white,
         //   appBar: AppBar(
         //     centerTitle: true,
         //     title: Row(
@@ -32,7 +32,7 @@ class _ProfileState extends State<Profile> {
         //         SizedBox(
         //           width: 10,
         //         ),
-        //         Text('Safe@Work'),
+        //         Text('SAFE@CAMPUS'),
         //       ],
         //     ),
         //     actions: [
@@ -88,7 +88,7 @@ class _ProfileState extends State<Profile> {
                               onPressed: () => Navigator.pop(context),
                               icon: Icon(
                                 Icons.arrow_back,
-                                color: Colors.white,
+                                color: Color(0xffcd2122),
                                 size: 27,
                               ),
                             ),

@@ -27,8 +27,7 @@ class _AddCovidReportState extends State<AddCovidReport> {
           leading: Align(
             alignment: Alignment.centerRight,
             child: InkWell(
-                child: Text('Logout',
-                    style: TextStyle(color: Colors.white, fontSize: 14)),
+                child: Icon(Icons.logout,color : Color(0xffcd2122).withOpacity(0.8),),
                 onTap: () {
                   AuthenticationService().logout();
                 }),
@@ -60,7 +59,7 @@ class _AddCovidReportState extends State<AddCovidReport> {
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Text(
-                    'Add New Employee Covid Test',
+                    'Add New Student Covid Test',
                     style: TextStyle(
                         color: Colors.grey[600],
                         fontSize: 18,
@@ -74,7 +73,7 @@ class _AddCovidReportState extends State<AddCovidReport> {
                   padding: const EdgeInsets.symmetric(
                       horizontal: 16.0, vertical: 2.0),
                   child: Text(
-                    'Employee Name',
+                    'Student Name',
                     style: TextStyle(
                         color: Colors.grey[800],
                         fontSize: 16.5,
@@ -192,6 +191,7 @@ class _AddCovidReportState extends State<AddCovidReport> {
                 RadioListTile<String>(
                     title: Text('Symptomatic'),
                     value: 'symptomatic',
+                    activeColor: Color(0xFfcd2122),
                     groupValue: typegroupValue,
                     onChanged: (String? val) {
                       setState(() {
@@ -201,6 +201,7 @@ class _AddCovidReportState extends State<AddCovidReport> {
                 RadioListTile<String>(
                     title: Text('Asymptomatic'),
                     value: 'asymptomatic',
+                    activeColor: Color(0xFfcd2122),
                     groupValue: typegroupValue,
                     onChanged: (String? val) {
                       setState(() {
@@ -220,6 +221,7 @@ class _AddCovidReportState extends State<AddCovidReport> {
                 ),
                 RadioListTile<bool>(
                     title: Text('Yes'),
+                    activeColor: Color(0xFfcd2122),
                     value: true,
                     groupValue: vaccinegroupValue,
                     onChanged: (val) {
@@ -229,6 +231,7 @@ class _AddCovidReportState extends State<AddCovidReport> {
                     }),
                 RadioListTile<bool>(
                     title: Text('No'),
+                    activeColor: Color(0xFfcd2122),
                     value: false,
                     groupValue: vaccinegroupValue,
                     onChanged: (val) {
@@ -249,6 +252,7 @@ class _AddCovidReportState extends State<AddCovidReport> {
                 ),
                 RadioListTile<bool>(
                     title: Text('Positive'),
+                    activeColor: Color(0xFfcd2122),
                     value: true,
                     groupValue: resultgroupValue,
                     onChanged: (val) {
@@ -259,6 +263,7 @@ class _AddCovidReportState extends State<AddCovidReport> {
                 RadioListTile<bool>(
                     title: Text('Negative'),
                     value: false,
+                    activeColor: Color(0xFfcd2122),
                     groupValue: resultgroupValue,
                     onChanged: (val) {
                       setState(() {
@@ -318,7 +323,7 @@ class _AddCovidReportState extends State<AddCovidReport> {
                     ),
                     style: ButtonStyle(
                         backgroundColor: MaterialStateProperty.all(
-                      Color(0xFF111343),
+                      Color(0xFFcd2122),
                     )),
                   ),
                 )

@@ -20,6 +20,7 @@ class _AdminCovidReportState extends State<AdminCovidReport> {
     return SafeArea(
       child: Scaffold(
         floatingActionButton: FloatingActionButton(
+          backgroundColor:  Color(0xffcd2122).withOpacity(0.8),
           onPressed: () {
             users.get().then((snap) => snap.docs.forEach((element) {
                   users.doc(element.id).update(
@@ -33,8 +34,7 @@ class _AdminCovidReportState extends State<AdminCovidReport> {
           leading: Align(
             alignment: Alignment.centerRight,
             child: InkWell(
-                child: Text('Logout',
-                    style: TextStyle(color: Colors.white, fontSize: 14)),
+                child: Icon(Icons.logout,color : Color(0xffcd2122).withOpacity(0.8),),
                 onTap: () {
                   AuthenticationService().logout();
                 }),
@@ -64,7 +64,7 @@ class _AdminCovidReportState extends State<AdminCovidReport> {
                         Employee? employee = Employee.fromJson(da);
                         return Card(
                           elevation: 5,
-                          shadowColor: Colors.grey,
+                          shadowColor: Color(0xffcd2122).withOpacity(0.8),
                           child: Padding(
                             padding: const EdgeInsets.all(8.0),
                             child: Column(
@@ -81,7 +81,7 @@ class _AdminCovidReportState extends State<AdminCovidReport> {
                                           style: TextStyle(
                                             fontSize: 18,
                                             fontWeight: FontWeight.bold,
-                                            color: Colors.red,
+                                            color: Color(0xffcd2122).withOpacity(0.8),
                                           ),
                                           children: [
                                             TextSpan(
@@ -103,7 +103,7 @@ class _AdminCovidReportState extends State<AdminCovidReport> {
                                         style: ButtonStyle(
                                           backgroundColor:
                                               MaterialStateProperty.all(
-                                            Color(0xFF111443),
+                                           Color(0xffcd2122).withOpacity(0.8),
                                           ),
                                         ),
                                         onPressed: () => Navigator.push(

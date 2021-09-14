@@ -388,7 +388,8 @@ class TabBarViewWidget extends StatelessWidget {
           TabBar(
             indicatorColor: Colors.black,
             indicatorWeight: 5.0,
-            labelColor: Color(0xFF111443),
+            labelColor: Color(0xFfcd2122).withOpacity(0.6),
+            // activeColor: Color(0xFfcd2122),
             labelPadding: EdgeInsets.only(top: 10.0, right: 5.0),
             unselectedLabelColor: Colors.grey,
             tabs: [

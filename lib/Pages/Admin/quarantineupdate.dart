@@ -43,7 +43,7 @@ class _QuarantineUpdateState extends State<QuarantineUpdate> {
       child: Scaffold(
         appBar: AppBar(
           elevation: 0.0,
-          backgroundColor: Color(0xFF111443),
+          backgroundColor: Colors.white,
           automaticallyImplyLeading: true,
           // leading:
           centerTitle: true,
@@ -57,7 +57,7 @@ class _QuarantineUpdateState extends State<QuarantineUpdate> {
                 width: 10,
               ),
               Text(
-                'SAFE@WORK',
+                'SAFE@CAMPUS',
                 style: TextStyle(
                   color: Colors.white,
                   fontWeight: FontWeight.bold,
@@ -72,7 +72,7 @@ class _QuarantineUpdateState extends State<QuarantineUpdate> {
               onPressed: () {},
               icon: Icon(
                 Icons.notifications,
-                color: Colors.white,
+                color: Color(0xffcd2122),
               ),
             ),
           ],
@@ -104,6 +104,11 @@ class _QuarantineUpdateState extends State<QuarantineUpdate> {
                     labelText: 'Address',
                     floatingLabelBehavior: FloatingLabelBehavior.auto,
                     border: OutlineInputBorder(
+                      borderSide: BorderSide(color: Color(0xffcd2122), width: 1),
+                      borderRadius: BorderRadius.circular(8.0),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: Color(0xffcd2122), width: 2),
                       borderRadius: BorderRadius.circular(8.0),
                     ),
                   ),
@@ -117,6 +122,11 @@ class _QuarantineUpdateState extends State<QuarantineUpdate> {
                     labelText: 'Block No',
                     floatingLabelBehavior: FloatingLabelBehavior.auto,
                     border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8.0),
+                      borderSide: BorderSide(color: Color(0xffcd2122))
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: Color(0xffcd2122), width: 2),
                       borderRadius: BorderRadius.circular(8.0),
                     ),
                   ),
@@ -177,7 +187,7 @@ class _QuarantineUpdateState extends State<QuarantineUpdate> {
                 child: ElevatedButton(
                     style: ButtonStyle(
                         backgroundColor: MaterialStateProperty.all(
-                      Color(0xFF111343),
+                     Color(0xffcd2122),
                     )),
                     onPressed: () async {
                       showDialog(
@@ -232,9 +242,9 @@ class _QuarantineUpdateState extends State<QuarantineUpdate> {
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Text(
-                  'Employee Details',
+                  'Student Details',
                   style: TextStyle(
-                    color: Color(0xFF111443),
+                    color: Colors.black,
                     fontSize: 17,
                     fontWeight: FontWeight.bold,
                   ),
@@ -317,7 +327,7 @@ class _QuarantineUpdateState extends State<QuarantineUpdate> {
           return Theme(
             data: ThemeData.light().copyWith(
               colorScheme: ColorScheme.light(
-                primary: Color(0xFF111343),
+                primary: Color(0xFFcd2122),
               ),
             ),
             child: child!,

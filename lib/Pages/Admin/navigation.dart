@@ -1,15 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:google_nav_bar/google_nav_bar.dart';
-import 'package:tracer/Pages/Admin/addemployee.dart';
 import 'package:tracer/Pages/Admin/covidstatus.dart';
 import 'package:tracer/Pages/Admin/quarantinedetails.dart';
-import 'package:tracer/Pages/Admin/quarantineupdate.dart';
-import 'package:tracer/Pages/History.dart';
-import 'package:tracer/Pages/covid_status/covid_status.dart';
-import 'package:tracer/Pages/home/home.dart';
-import 'package:tracer/Pages/profile/profile.dart';
-import 'package:tracer/Pages/quarantine/quarantinetab.dart';
-import 'package:tracer/models.dart/employee.dart';
 
 import 'addresport.dart';
 
@@ -46,9 +37,9 @@ class _AdminNavigationState extends State<AdminNavigation> {
       body: listScreens[tabIndex],
       bottomNavigationBar: BottomNavigationBar(
           type: BottomNavigationBarType.fixed,
-          selectedItemColor: Colors.white,
-          unselectedItemColor: Color(0xFF8DA0FF).withOpacity(0.53),
-          backgroundColor: Color(0xFF111343),
+          selectedItemColor:  Color(0xffcd2122),
+          unselectedItemColor: Color(0xffcd2122).withOpacity(0.6),
+          backgroundColor: Colors.white,
           currentIndex: tabIndex,
           onTap: (int index) {
             setState(() {
@@ -57,16 +48,16 @@ class _AdminNavigationState extends State<AdminNavigation> {
           },
           items: [
             BottomNavigationBarItem(
-              icon: Icon(Icons.bar_chart),
-              title: Text('Covid Status'),
+              icon: Icon(Icons.bar_chart, ),
+              title: Text('Covid Status', style: TextStyle(color: Color(0xffcd2122)),),
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.hotel),
-              title: Text('Quarantine Update'),
+              title: Text('Quarantine Update',style: TextStyle(color: Color(0xffcd2122)),),
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.system_update_alt),
-              title: Text('Update Result'),
+              title: Text('Update Result',style: TextStyle(color: Color(0xffcd2122)),),
             ),
             // BottomNavigationBarItem(
             //   icon: Icon(Icons.person_add),

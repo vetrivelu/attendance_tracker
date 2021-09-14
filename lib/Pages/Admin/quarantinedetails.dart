@@ -25,8 +25,7 @@ class _QuarantineDetailsState extends State<QuarantineDetails> {
           leading: Align(
             alignment: Alignment.centerRight,
             child: InkWell(
-                child: Text('Logout',
-                    style: TextStyle(color: Colors.white, fontSize: 14)),
+                child: Icon(Icons.logout,color : Color(0xffcd2122).withOpacity(0.8),),
                 onTap: () {
                   AuthenticationService().logout();
                 }),
@@ -75,6 +74,7 @@ class _QuarantineDetailsState extends State<QuarantineDetails> {
                           ),
                           child: Card(
                             elevation: 5,
+                            shadowColor: Color(0xffcd2122).withOpacity(0.6),
                             child: Column(
                               children: [
                                 ListTile(
@@ -90,7 +90,8 @@ class _QuarantineDetailsState extends State<QuarantineDetails> {
                                               text: 'Name : ',
                                               style: TextStyle(
                                                 fontWeight: FontWeight.bold,
-                                                color: Colors.indigo[900],
+                                                // color: Color(0xffcd2122).withOpacity(0.8),
+                                                color: Colors.black
                                               ),
                                               children: [
                                                 TextSpan(
@@ -107,7 +108,8 @@ class _QuarantineDetailsState extends State<QuarantineDetails> {
                                               text: 'Address : ',
                                               style: TextStyle(
                                                 fontWeight: FontWeight.bold,
-                                                color: Colors.indigo[900],
+                                                // color: Color(0xffcd2122).withOpacity(0.8),
+                                                color: Colors.black
                                               ),
                                               children: [
                                                 TextSpan(
@@ -133,7 +135,8 @@ class _QuarantineDetailsState extends State<QuarantineDetails> {
                                               text: 'Block : ',
                                               style: TextStyle(
                                                 fontWeight: FontWeight.bold,
-                                                color: Colors.indigo[900],
+                                                // color: Color(0xffcd2122).withOpacity(0.8),
+                                                color: Colors.black
                                               ),
                                               children: [
                                                 TextSpan(
@@ -150,7 +153,8 @@ class _QuarantineDetailsState extends State<QuarantineDetails> {
                                               text: 'Duration : ',
                                               style: TextStyle(
                                                 fontWeight: FontWeight.bold,
-                                                color: Colors.indigo[900],
+                                                // color: Color(0xffcd2122).withOpacity(0.8),
+                                                color: Colors.black
                                               ),
                                               children: [
                                                 TextSpan(

@@ -15,7 +15,7 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFF111443),
+      backgroundColor: Color(0xFFFfffff),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         mainAxisAlignment: MainAxisAlignment.center,
@@ -26,7 +26,7 @@ class _LoginPageState extends State<LoginPage> {
             height: 15,
           ),
           Text(
-            'SAFE@WORK',
+            'SAFE@CAMPUS',
             style: TextStyle(
               color: Colors.white,
               fontWeight: FontWeight.bold,
@@ -42,8 +42,8 @@ class _LoginPageState extends State<LoginPage> {
             child: Text(
               'ID',
               style: TextStyle(
-                color: Colors.white,
-                fontWeight: FontWeight.bold,
+                color: Colors.black,
+                fontWeight: FontWeight.normal,
                 fontSize: 15,
               ),
               textAlign: TextAlign.start,
@@ -68,8 +68,9 @@ class _LoginPageState extends State<LoginPage> {
                 textAlignVertical: TextAlignVertical.center,
                 decoration: InputDecoration(
                   filled: true,
-                  prefixIcon: Icon(Icons.person,
-                      color: Theme.of(context).iconTheme.color),
+                  prefixIcon: Icon(Icons.person_rounded,
+                      // color: Theme.of(context).iconTheme.color),
+                       color : Color(0xFFcd2122)),
                   border: OutlineInputBorder(
                       borderSide: BorderSide.none,
                       borderRadius: BorderRadius.all(Radius.circular(30))),
@@ -88,8 +89,8 @@ class _LoginPageState extends State<LoginPage> {
             child: Text(
               'PASSWORD',
               style: TextStyle(
-                color: Colors.white,
-                fontWeight: FontWeight.bold,
+                color: Colors.black,
+                fontWeight: FontWeight.normal,
                 fontSize: 15,
               ),
               textAlign: TextAlign.start,
@@ -115,7 +116,8 @@ class _LoginPageState extends State<LoginPage> {
                 decoration: InputDecoration(
                   filled: true,
                   prefixIcon: Icon(Icons.security,
-                      color: Theme.of(context).iconTheme.color),
+                      // color: Theme.of(context).iconTheme.color),
+                      color:  Color(0xFFcd2122)),
                   border: OutlineInputBorder(
                       borderSide: BorderSide.none,
                       borderRadius: BorderRadius.all(Radius.circular(30))),
@@ -133,13 +135,13 @@ class _LoginPageState extends State<LoginPage> {
             child: GestureDetector(
               onTap: _login,
               child: Card(
-                color: Colors.white,
+                color: Color(0xFFcd2122),
                 child: Padding(
                   padding: const EdgeInsets.all(16.0),
                   child: Text(
                     'Login',
                     style: TextStyle(
-                      color: Colors.black,
+                      color: Colors.white,
                       fontWeight: FontWeight.bold,
                     ),
                   ),

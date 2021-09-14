@@ -45,7 +45,8 @@ class _HomeState extends State<Home> {
           type: BottomNavigationBarType.fixed,
           selectedItemColor: Colors.white,
           unselectedItemColor: Color(0xFF8DA0FF).withOpacity(0.53),
-          backgroundColor: Color(0xFF111343),
+          // backgroundColor: Color(0xFF111343),
+          backgroundColor: Colors.white,
           currentIndex: tabIndex,
           onTap: (int index) {
             setState(() {
