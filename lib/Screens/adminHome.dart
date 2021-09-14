@@ -34,20 +34,20 @@ class _AdminHomeState extends State<AdminHome> {
   Widget build(BuildContext context) {
 
     return Scaffold(
-          appBar: AppBar(
-            leading: Icon(Icons.calendar_view_month),
-            title: Text("Attendance app"),
-            actions: [
-              Padding(
-                padding: const EdgeInsets.only(right: 20),
-                child: GestureDetector(
-                  child: Icon(Icons.logout),
-                  onTap: widget.auth.logout,
-                ),
-              ),
-            ],
-            titleSpacing: 10,
-          ),
+          // appBar: AppBar(
+          //   leading: Icon(Icons.calendar_view_month),
+          //   title: Text("Attendance app"),
+          //   actions: [
+          //     Padding(
+          //       padding: const EdgeInsets.only(right: 20),
+          //       child: GestureDetector(
+          //         child: Icon(Icons.logout),
+          //         onTap: widget.auth.logout,
+          //       ),
+          //     ),
+          //   ],
+          //   titleSpacing: 10,
+          // ),
           bottomNavigationBar: BottomNavigationBar(
                   items: getBottomNavbarItems(),
                   currentIndex: _selectedIndex,
@@ -55,6 +55,7 @@ class _AdminHomeState extends State<AdminHome> {
                 ),
           floatingActionButtonLocation:
               FloatingActionButtonLocation.miniCenterFloat,
+          floatingActionButton: FloatingActionButton(onPressed: widget.auth.logout, child: Icon(Icons.logout),),
           body: getBody(context, _selectedIndex),
         );
   }

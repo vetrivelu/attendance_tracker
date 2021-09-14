@@ -15,9 +15,11 @@ class StaffHome extends StatefulWidget {
   const StaffHome({
     this.person,
     this.auth,
+    this.isAdminView = false,
   });
   final PersonModel person;
   final AuthenticationService auth;
+  final bool isAdminView;
   @override
   _StaffHomeState createState() => _StaffHomeState();
 }
@@ -52,9 +54,15 @@ class _StaffHomeState extends State<StaffHome> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButton: FloatingActionButton(
-        onPressed: widget.auth.logout,
-        child: Icon(Icons.logout),
+      floatingActionButton: widget.isAdminView ? null : FloatingActionButton(
+        onPressed:(){
+          if((widget.isAdminView)){
+            Navigator.pop(context);
+          }else {
+            widget.auth.logout();
+          }
+        },
+        child: widget.isAdminView ? Icon(Icons.flip_to_back) : Icon(Icons.logout),
       ),
       // floatingActionButtonLocation: FloatingActionButtonLocatio,
       body: SafeArea(
@@ -64,7 +72,7 @@ class _StaffHomeState extends State<StaffHome> {
                 BoxConstraints(minHeight: MediaQuery.of(context).size.height),
             child: Column(
               children: [
-                widget.person.isAdmin
+                widget.isAdminView
                     ? Container()
                     : Card(
                         child: SizedBox(
@@ -97,7 +105,7 @@ class _StaffHomeState extends State<StaffHome> {
                       ),
                 ExpansionTile(
                   title: Text("Dashboard"),
-                  initiallyExpanded: widget.person.isAdmin,
+                  initiallyExpanded: widget.isAdminView,
                   leading: Icon(Icons.dashboard),
                   // maintainState: true,
                   children: [

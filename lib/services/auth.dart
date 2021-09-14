@@ -18,17 +18,12 @@ class AuthenticationService extends ChangeNotifier
 
 
   Future<String> signUpwithEmailandPassword({ String email,  String password,  String name}) async {
-    try {
       var credential = await _firebaseAuth.createUserWithEmailAndPassword(
           email: email, password: password);
       // notifyListeners();
       print(credential.user.uid);
       addPerson(person : PersonModel(name: name, lastDate: DateTime.now(), uid : credential.user.uid));
       return credential.user.uid;
-    } on FirebaseAuthException catch (e) {
-      return "error" + e.code;
-    }
-    
   }
 
   Future<String> signInWithEmailAndPassword({ String email,  String password}) async {

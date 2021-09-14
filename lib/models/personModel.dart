@@ -196,7 +196,7 @@ class PersonModel with ChangeNotifier {
 
   getCalendarAttendance(int month) {
     var calendarStatus = [];
-    for (int i = 0; i < 31; i++) {
+    for (int i = 0; i <= 31; i++) {
       calendarStatus.add(0);
     }
     ;

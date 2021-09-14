@@ -3,6 +3,7 @@ import 'package:attendance_tracker/models/personModel.dart';
 import 'package:attendance_tracker/services/db.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:table_calendar/table_calendar.dart';
 
 class ListPeople extends StatelessWidget {
   const ListPeople({Key key}) : super(key: key);
@@ -33,6 +34,7 @@ class ListPeople extends StatelessWidget {
                         MaterialPageRoute(
                           builder: (context) => StaffHome(
                             person: PersonModel.fromJson(data),
+                            isAdminView: true,
                           ),
                         ));
                   },
@@ -43,7 +45,7 @@ class ListPeople extends StatelessWidget {
                       subtitle: Text(
                           DateTime.parse(data['lastDate'].toDate().toString())
                               .toString()),
-                      tileColor: Colors.indigo.shade200,
+                      tileColor: isSameDay(DateTime.parse(data['lastDate'].toDate().toString()), DateTime.now()) ? Colors.indigo.shade100 : Colors.redAccent, 
                     ),
                   ),
                 );

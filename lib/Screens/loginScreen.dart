@@ -1,5 +1,6 @@
 import 'package:attendance_tracker/constants.dart';
 import 'package:attendance_tracker/services/auth.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -14,16 +15,25 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   bool _signin = true;
-
+  String returnText;
   final emailController     = TextEditingController();
   final passwordController  = TextEditingController();
   final nameController      = TextEditingController(); 
 
-void submit(){
+Future<void> submit() async { 
   
-  _signin ? widget.auth.signInWithEmailAndPassword(email: emailController.text, password: passwordController.text) 
-  // : widget.auth.signUpwithEmailandPassword(email: "1119@xxx.com", password: "passwordController.text");
- : widget.auth.signUpwithEmailandPassword(email: emailController.text, password: passwordController.text, name: nameController.text );
+  if( _signin == true) 
+  { 
+    returnText = await widget.auth.signInWithEmailAndPassword(email: emailController.text, password: passwordController.text); 
+    // if(returnText == "user-not-found"){
+    //   return ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Provided email is not registered")));
+    // } else if (returnText == "wrong-password") {
+    //   return SnackBar(content: Text("Oops...Wrong password! try again."));
+    // }
+  }
+  else { 
+    widget.auth.signUpwithEmailandPassword(email: emailController.text, password: passwordController.text, name: nameController.text );
+  }
 }
 
   Widget _buildEmailTF() {
@@ -120,6 +130,7 @@ void submit(){
             style: TextStyle(
               color: Colors.white,
               fontFamily: 'OpenSans',
+               
             ),
             decoration: InputDecoration(
               border: InputBorder.none,
@@ -150,13 +161,16 @@ void submit(){
     );
   }
 
-  Widget _buildLoginBtn() {
+  Widget _buildLoginBtn(BuildContext context) {
     return Container(
       padding: EdgeInsets.symmetric(vertical: 25.0),
       width: double.infinity,
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(primary: Colors.lightGreen[400]),
-        onPressed: submit,
+        onPressed: (){
+          submit();
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(returnText)));
+        },
         child: Text(
           _signin ? "LOG IN" : "REGISTER",
           style: TextStyle(
@@ -281,7 +295,7 @@ void submit(){
                       ),
                       _buildPasswordTF(),
                       _buildForgotPasswordBtn(),
-                      _buildLoginBtn(),
+                      _buildLoginBtn(context),
                       _buildSignInWithText(),
                       // _buildSocialBtnRow(),
                       // _buildSignupBtn(),

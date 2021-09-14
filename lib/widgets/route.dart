@@ -33,10 +33,10 @@ class AuthRoute extends StatelessWidget {
                           }
                         return StaffHome(person : staff, auth: auth,);
                       } else {
-                        return CircularProgressIndicator();
+                        return Scaffold(body: Center(child: CircularProgressIndicator()));
                       } break;
                     default :  
-                      return CircularProgressIndicator();
+                      return Scaffold(body: Center(child: CircularProgressIndicator()));
                   }
                 });
           }
